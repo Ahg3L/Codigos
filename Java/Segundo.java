@@ -7,7 +7,7 @@ class Segundo {
 
         obj.setNumero(1);
         System.out.println(obj.getNumero());
-        obj.funcion(6);
+        obj.funcion(6 );
 
     }
 }
