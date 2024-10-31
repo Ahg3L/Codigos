@@ -1,18 +1,19 @@
+package mypack;
 import java.util.Scanner;
 
-abstract class Principal {
-    private int  numero;
-    private String Nombre;
+class Persona {
+    protected  int  año;
+    protected  String Nombre;
     
     Scanner entrada = new Scanner (System.in);
 
-    public void setNumero(){
-        System.out.println("Escribe un numero : ");
-        numero = entrada.nextInt(); 
+    public void setaños(){
+        System.out.println("Escribe un año : ");
+        año = entrada.nextInt(); 
     }
 
-    public int  getNumero() {
-         return numero;
+    public int  getaño() {
+         return año;
     }
 
     public void setNombre(){
