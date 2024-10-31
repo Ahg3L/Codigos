@@ -1,22 +1,28 @@
+import java.util.Scanner;
+
 abstract class Principal {
-    public abstract void funcion(int a);
-}
-
-class Cprincipal extends Principal {
     private int  numero;
+    private String Nombre;
+    
+    Scanner entrada = new Scanner (System.in);
 
-    @Override
-    public void funcion(int a) {
-        for (int i = a; i > 0; i--) {
-            System.out.println("hola");
-        }
+    public void setNumero(){
+        System.out.println("Escribe un numero : ");
+        numero = entrada.nextInt(); 
     }
 
-    public void setNumero(int newNumero){
-        numero = newNumero;
-    }
     public int  getNumero() {
          return numero;
+    }
+
+    public void setNombre(){
+        entrada.nextLine();
+        System.out.println("Escribe un nombre");
+        Nombre = entrada.nextLine(); 
+    }
+    
+    public String getNombre(){
+        return Nombre;
     }
 
 }

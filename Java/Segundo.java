@@ -1,13 +1,16 @@
+
+
 class Segundo {
     public static void main(String[] args) {
-        Cprincipal obj = new Cprincipal();
+        Principal obj = new Principal() {};
 
         System.out.print("\033[H\033[2J");
         System.out.flush();
-
-        obj.setNumero(1);
+        
+        obj.setNumero();
         System.out.println(obj.getNumero());
-        obj.funcion(6 );
-
+        
+        obj.setNombre();   
+        System.out.println(obj.getNombre());
     }
 }
