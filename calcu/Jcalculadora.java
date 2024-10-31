@@ -1,4 +1,4 @@
-    package calcu.calcu;
+    package calcu;
 
 import java.util.Scanner;
 
