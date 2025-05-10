@@ -1,12 +1,12 @@
 #include <iostream>
-#include <cstdio>
 #include <vector>
-#include <math.h>
+#include <cmath>
+
 using namespace std;
 
-void imprimirMatriz(vector<vector<double>> &matriz)
+void imprimirMatriz(const vector<vector<double>> &matriz)
 {
-    for (auto &fila : matriz)
+    for (const auto &fila : matriz)
     {
         for (double elemento : fila)
         {
@@ -89,12 +89,13 @@ void LU(vector<vector<double>> &A, vector<double> &R)
         R[i] = (R[i] - suma) / U[i][i];
     }
 
+    cout << "Resultados:" << endl;
     cout << "x = " << R[0] << endl;
     cout << "y = " << R[1] << endl;
     cout << "z = " << R[2] << endl;
 }
 
-double funcion(int x, vector<vector<double>> &A, int n)
+double funcion(int x, const vector<vector<double>> &A, int n)
 {
     double resultado = 0;
 
@@ -185,13 +186,16 @@ vector<vector<double>> matrizInversa(const vector<vector<double>> &matriz)
         cerr << "La matriz no es cuadrada. No se puede calcular la inversa." << endl;
         return {};
     }
+
     double determinante = 1.0;
     for (size_t i = 0; i < n; ++i)
     {
         determinante *= matriz[i][i];
     }
 
-    if (determinante == 0.0)
+    const double epsilon = 1e-10; // Valor de tolerancia para determinar si el determinante es cero.
+
+    if (fabs(determinante) < epsilon)
     {
         cerr << "La matriz es singular. No se puede calcular la inversa." << endl;
         return {};
@@ -228,7 +232,7 @@ void menuMatx(vector<vector<double>> &matriz, vector<double> &R)
         {
         case '1':
             ingresarDatosMatriz(matriz, R);
-
+            break;
         case '2':
             LU(matriz, R);
             system("pause");
@@ -242,6 +246,7 @@ void menuMatx(vector<vector<double>> &matriz, vector<double> &R)
             cout << "Matriz Adjunta:" << endl;
             imprimirMatriz(adjunta);
             system("pause");
+            break;
         case '5':
             system("cls");
             cout << "Adios :) ";
@@ -258,7 +263,7 @@ void menuMatx(vector<vector<double>> &matriz, vector<double> &R)
 
 void Interpolacion()
 {
-    int n;
+    int n, otra;
     double resul;
 
     cout << "¿Cuantos datos vas a ingresar ?";
@@ -272,12 +277,18 @@ void Interpolacion()
         cout << "Ingresa el dato en y : ";
         cin >> equis[i][1];
     }
-    cout << "Ingresa un numero X te muestro su valor en Y : ";
-    cin >> resul;
-    cout << "\n"
-         << resul << " , " << funcion(resul, equis, n);
-    cout << endl;
-    cout << "Quieres hacer otra coordenada ? ";
+    do
+    {
+        cout << "Ingresa un numero X te muestro su valor en Y : ";
+        cin >> resul;
+        cout << "\n"
+             << resul << " , " << funcion(resul, equis, n);
+        cout << endl;
+        cout << "Quieres hacer otra coordenada ? (1 para si, 0 para no): ";
+        cin >> otra;
+
+    } while (otra == 1);
+
     system("pause");
 }
 
@@ -287,7 +298,7 @@ void biseccion()
     double inter1, inter2, contador = 0;
     double total, total2, total3;
 
-    cout << "¿Qué potencia tiene el polinomio? : ";
+    cout << "¿Que potencia tiene el polinomio? : ";
     cin >> potencia;
     double coeficientes[potencia + 1];
 
@@ -316,7 +327,7 @@ void biseccion()
 
         if (total3 == 0.0 || (inter2 - inter1) / 2 < 0.0001)
         {
-            cout << "Raíz encontrada en: " << puntoMedio << endl;
+            cout << "Raiz encontrada en: " << puntoMedio << endl;
             break;
         }
 
@@ -363,6 +374,10 @@ int main()
             break;
         case 4:
             return 0;
+        default:
+            cout << "Opcion no valida ";
+            system("pause");
+            break;
         }
     }
     return 0;

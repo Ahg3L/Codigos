@@ -3,14 +3,20 @@
 
 using namespace std;
 
+double factorial(int n) {
+    double result = 1.0;
+    for (int i = 2; i <= n; ++i)
+        result *= i;
+    return result;
+}
+
 double calcularRaizCuadradaDe2(int iteraciones) {
     double resultado = 0.0;
-    int factorial = 1;
-	
-    for (int i = 1; i <= iteraciones; ++i) {
-    	factorial = factorial * i;
-        resultado = resultado +(2*( ((2 * i) - 3) / (pow(4, i) * factorial)));
-        
+
+    for (int n = 0; n < iteraciones; ++n) {
+        double numerador = pow(-1, n) * tgamma(2 * n + 1); // (2n)!
+        double denominador = (1 - 2 * n) * pow(factorial(n), 2) * pow(4, n);
+        resultado += numerador / denominador;
     }
 
     return resultado;
@@ -21,8 +27,8 @@ int main() {
     cout << "Ingrese el número de iteraciones para calcular la raíz cuadrada de 2: ";
     cin >> iteraciones;
 
-    double raizCuadradaDe2 = 1-calcularRaizCuadradaDe2(iteraciones);
-    
+    double raizCuadradaDe2 = calcularRaizCuadradaDe2(iteraciones);
+
     cout << "La aproximación de la raíz cuadrada de 2 con " << iteraciones << " iteraciones es: " << raizCuadradaDe2 << endl;
 
     return 0;

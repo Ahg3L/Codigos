@@ -1,7 +1,7 @@
-zz #include<iostream>
+#include <iostream>
 #include <cmath>
 
-    using namespace std;
+using namespace std;
 
 double calcularEuler(int iteraciones)
 {
@@ -25,6 +25,6 @@ int main()
 
     double e = calcularEuler(iteraciones);
 
-    cout << "El número de Euler (e) calculado con " << iteraciones << " iteraciones es: " << e;
+    cout << "El numero de Euler (e) calculado con " << iteraciones << " iteraciones es: " << e;
     return 0;
 }
