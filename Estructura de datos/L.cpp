@@ -8,15 +8,44 @@ struct Nodo
     Nodo(int val) : dato(val), next(nullptr) {}
 };
 
-struct ingresar
+struct ingresar(Nodo *&head, int val)
 {
+    Nodo *newnodo = new Nodo(val);
+    newnodo->next = head;
+    head = newnodo
 };
 
-int main()
+struct borrar(Nodo *&head)
 {
-    int num = 10;
-    int *p = &num;
-    cout << &p;
+    if (head == nullptr)
+    {
+        return;
+    }
+    else
+    {
+
+        head = head->next;
+    }
+}
+
+struct imprimir(Nodo *&head)
+{
+
+}
+
+int
+main()
+{
+    Nodo *head = nullptr;
+
+    insert(head, 3);
+    insert(head, 1);
+    insert(head, 5);
+    insert(head, 2);
+    insert(head, 4);
+
+    cout << "Lista enlazada no ordenada: ";
+    printList(head);
 
     return 0;
 }
