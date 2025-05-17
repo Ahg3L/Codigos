@@ -17,7 +17,7 @@ void insert(Node *&head, int val)
     head = newNode;
 }
 
-// Función para imprimir la lista enlazada
+// Función para imprimir la lista en azada
 void printList(Node *head)
 {
     while (head != nullptr)
@@ -68,7 +68,6 @@ int main()
 {
     Node *head = nullptr;
 
-    // Inserta elementos en la lista enlazada
     insert(head, 3);
     insert(head, 1);
     insert(head, 5);
@@ -77,8 +76,6 @@ int main()
 
     cout << "Lista enlazada no ordenada: ";
     printList(head);
-
-    // Ordena la lista enlazada utilizando el algoritmo de ordenamiento por inserción
     insertionSort(head);
 
     cout << "Lista enlazada ordenada: ";
