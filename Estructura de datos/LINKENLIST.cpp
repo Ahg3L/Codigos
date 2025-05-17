@@ -2,9 +2,10 @@
 
 using namespace std;
 
-// Definición de la estructura de un nodo
+
 struct Node
 {
+
     int data;
     Node *next;
     Node(int val) : data(val), next(NULL) {}
