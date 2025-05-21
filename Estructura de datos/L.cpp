@@ -23,8 +23,9 @@ struct borrar(Nodo *&head)
     }
     else
     {
-
+        Nodo *temp = head;
         head = head->next;
+        delate temp;
     }
 }
 

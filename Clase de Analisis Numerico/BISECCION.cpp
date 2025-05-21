@@ -2,11 +2,13 @@
 #include <cmath>
 using namespace std;
 
-double funcion(double x) {
+double funcion(double x)
+{
     return pow(cos(x), 2) - 2 * x + 6;
 }
 
-int main() {
+int main()
+{
     double a, b, c, fa, fb, fc, error = 1e-6;
     int i = 0;
 
@@ -18,26 +20,32 @@ int main() {
     fa = funcion(a);
     fb = funcion(b);
 
-    if (fa * fb > 0) {
+    if (fa * fb > 0)
+    {
         cout << "No se puede aplicar el método de bisección. f(a) y f(b) tienen el mismo signo." << endl;
-        return 1;
+        return 0;
     }
 
-    cout << "\nIter\t a\t\t b\t\t c\t\t f(c)\t\t Error\n";
-    do {
+    cout << "\nIter\t a\tb\t c\t f(c)\t Error\n";
+    do
+    {
         c = (a + b) / 2;
         fc = funcion(c);
 
         cout << i << "\t" << a << "\t" << b << "\t" << c << "\t" << fc;
-        if (i > 0) {
+        if (i > 0)
+        {
             cout << "\t" << fabs(c - (a + b) / 2);
         }
         cout << endl;
 
-        if (fa * fc < 0) {
+        if (fa * fc < 0)
+        {
             b = c;
             fb = fc;
-        } else {
+        }
+        else
+        {
             a = c;
             fa = fc;
         }

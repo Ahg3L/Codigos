@@ -191,7 +191,7 @@ void rango()
 // Función para calcular la desviación media de pila y cola
 void desviacion()
 {
-    float desP, desC = 0.0;
+    float desP = 0.0, desC = 0.0;
     for (int i = 0; i < contadorP; i++)
     {
         desP = desP + ((pila[i] - P.prompila) / contadorP);
