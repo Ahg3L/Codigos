@@ -10,12 +10,11 @@ double factorial(int n) {
     return result;
 }
 
-double calcularRaizCuadradaDe2(int iteraciones) {
+double calcularRaizDe2(int iteraciones) {
     double resultado = 0.0;
-
     for (int n = 0; n < iteraciones; ++n) {
-        double numerador = pow(-1, n) * tgamma(2 * n + 1); // (2n)!
-        double denominador = (1 - 2 * n) * pow(factorial(n), 2) * pow(4, n);
+      double numerador = pow(-1, n) * tgamma(2 * n + 1); 
+      double denominador = (1 - 2 * n) * pow(factorial(n), 2) * pow(4, n);
         resultado += numerador / denominador;
     }
 
@@ -27,7 +26,7 @@ int main() {
     cout << "Ingrese el número de iteraciones para calcular la raíz cuadrada de 2: ";
     cin >> iteraciones;
 
-    double raizCuadradaDe2 = calcularRaizCuadradaDe2(iteraciones);
+    double raizCuadradaDe2 = calcularRaizDe2(iteraciones);
 
     cout << "La aproximación de la raíz cuadrada de 2 con " << iteraciones << " iteraciones es: " << raizCuadradaDe2 << endl;
 
