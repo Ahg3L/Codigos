@@ -76,16 +76,20 @@ public class ventana extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void boton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton1ActionPerformed
+        
         area1.setFont(new Font("Arial",0,24));
         String[] cadenas = {"perro", "gato", "elefante", "sol", "luna", "estrella", "mar"};
+        // Muestra el arreglo original en el área de texto
+        area1.setText(area1.getText() + "Arreglo original : \n" + Arrays.toString(cadenas));
         
-        area1.setText( area1.getText() + "Arreglo original : \n"+
-        Arrays.toString(cadenas));
+        // Ordena el arreglo con QuickSort
         quickSort(cadenas, 0, cadenas.length - 1);
-        area1.setText( area1.getText() + "\n Arreglo ordenado alfabeticamente: \n"+
-        Arrays.toString(cadenas));
+
+        // Muestra el arreglo ordenado en el área de texto
+        area1.setText(area1.getText() + "\n Arreglo ordenado alfabeticamente: \n" + Arrays.toString(cadenas));
     }//GEN-LAST:event_boton1ActionPerformed
     
+    // Intercambia dos elementos en el arreglo
     private static void swap(String[] arr, int i, int j) {
         String temp = arr[i];
         arr[i] = arr[j];
@@ -93,7 +97,7 @@ public class ventana extends javax.swing.JFrame {
     }
 
     // Partición usando el tamaño de la cadena como pivote
-   private static int partition(String[] arr, int low, int high) {
+   private static int particion(String[] arr, int low, int high) {
         String pivot = arr[high]; // último elemento como pivote
         int i = low - 1;
 
@@ -109,10 +113,10 @@ public class ventana extends javax.swing.JFrame {
         return i + 1;
     }
 
-    // Implementación de QuickSort
+    // Implementación recursiva de QuickSort
      public static void quickSort(String[] arr, int low, int high) {
         if (low < high) {
-            int pi = partition(arr, low, high);
+            int pi = particion(arr, low, high);
 
             // Ordenar izquierda y derecha
             quickSort(arr, low, pi - 1);
