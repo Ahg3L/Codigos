@@ -2,55 +2,64 @@
 #include <map>
 
 using namespace std;
-
+// (valores maximos  y minimose pilas y colas )
 int maximoP = 0, maximoC = 0, minimoP = 0, minimoC = 0;
+// (Contadores de elementos en pila y cola)
 int contadorP = 0, contadorC = 0;
+
 int pila[15] = {0};
 int cola[15] = {0};
 
-void anadir(int c, int d)
+void anadir(int puntero_pila, int puntero_cola)
 {
-    int opsa = 0;
+    int opc = 0;
     int valor = 0;
 
-    cout << "Pila o cola?" << endl;
-    cout << "1. Pila" << endl;
-    cout << "2. Colas" << endl;
-    cout << "Ingresa una opcion: ";
-    cin >> opsa;
+    cout << "Pila o cola?\n1.-Pila\n2.-Cola\n";
 
-    switch (opsa)
+    if (!(cin >> opc))
+    {
+        cout << "Entrada invalida." << endl;
+        cin.clear();            // reinicia el estado de error de cin
+        cin.ignore(1000, '\n'); // limpia el buffer de entrada
+        system("pause");
+        return;
+    }
+
+    switch (opc)
     {
     case 1:
-        cout << "Ingrese un valor: ";
+        cout << "Ingrese un valor:";
         cin >> valor;
-        pila[c] = valor;
+        pila[puntero_pila] = valor;
         contadorP++;
         break;
 
     case 2:
-        cout << "Ingrese un valor: ";
+        cout << "Ingrese un valor:";
         cin >> valor;
-        cola[d] = valor;
+        cola[puntero_cola] = valor;
         contadorC++;
         break;
 
     default:
-        cout << "Opcion no válida." << endl;
+        cout << "Opcion no valida." << endl;
+        system("pause");
         break;
     }
 }
 
-// Estructura para almacenar valores máximos
-struct Mm
+// Estructura para almacenar valores máximos y minimos
+struct Maximos_y_minimos
 {
     int maximoP = 0, maximoC = 0, minimoP = 0, minimoC = 0;
 } maxi, mini;
 
 // Función para encontrar el valor máximo en pila y cola
-void max()
+void maximo()
 {
-    maxi.maximoP = 0, maxi.maximoC = 0;
+    mini.minimoP = pila[0];
+    mini.minimoC = cola[0];
 
     for (int i = 0; i < 15; i++)
     {
@@ -66,7 +75,7 @@ void max()
 }
 
 // Función para encontrar el valor mínimo en pila y cola
-void min()
+void minimo()
 {
     mini.minimoP = pila[0];
     mini.minimoC = cola[0];
@@ -182,8 +191,8 @@ void promedio()
 // Función para calcular el rango de pila y cola
 void rango()
 {
-    min();
-    max();
+    minimo();
+    maximo();
     cout << "El rango de la pila: " << (maxi.maximoP - mini.minimoP) << endl;
     cout << "El rango de la cola: " << (maxi.maximoC - mini.minimoC) << endl;
 }
@@ -229,7 +238,7 @@ int main()
              << endl
              << "Elija una opcion" << endl;
         cout << "1. Anadir un elemento" << endl;
-        cout << "2. Encontrar el maximo" << endl;
+        cout << "2. Encontrar el numero mayor y el menor" << endl;
         cout << "3. Encontrar la moda" << endl;
         cout << "4. Encontrar la sumatoria" << endl;
         cout << "5. Encontrar el promedio" << endl;
@@ -237,7 +246,14 @@ int main()
         cout << "7. Calcular la desviacion media" << endl;
         cout << "8. Salir" << endl;
 
-        cin >> opcion;
+        if (!(cin >> opcion))
+        {
+            cout << "Entrada invalida." << endl;
+            cin.clear();            // reinicia el estado de error de cin
+            cin.ignore(1000, '\n'); // limpia el buffer de entrada
+            system("pause");
+            return;
+        }
 
         switch (opcion)
         {
@@ -246,8 +262,9 @@ int main()
             break;
 
         case 2: // Encontrar el máximo
-            max();
+            maximo();
             cout << "Maximo Pila: " << maxi.maximoP << "  Maximo Cola: " << maxi.maximoC << endl;
+            cout << "Minimo Pila: " << mini.minimoP << "  Minimo Cola: " << mini.minimoC << endl;
             system("pause");
             break;
 
@@ -260,7 +277,7 @@ int main()
             sumaT();
             cout << "La sumatoria de la pila es: " << S.sumapila << " y el de cola es: " << S.sumacola << endl;
             system("pause");
-            << break;
+            break;
 
         case 5: // Encontrar el promedio
             promedio();

@@ -12,12 +12,12 @@ import javax.swing.JOptionPane;
 public class evaluarfuncion extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(evaluarfuncion.class.getName());
-
-    /**
-     * Creates new form evaluarfuncion
-     */
+    private lienzo miLienzo;
+    
     public evaluarfuncion() {
         initComponents();
+        miLienzo = new lienzo();
+        add(miLienzo);
     }
 
     /**
@@ -29,20 +29,36 @@ public class evaluarfuncion extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        area2 = new javax.swing.JTextArea();
         boton2 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(600, 400));
 
-        area2.setColumns(20);
-        area2.setRows(5);
-        jScrollPane1.setViewportView(area2);
-
-        boton2.setText("resolver");
+        boton2.setText("Resolver");
         boton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 boton2ActionPerformed(evt);
+            }
+        });
+
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+
+        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField2ActionPerformed(evt);
+            }
+        });
+
+        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField3ActionPerformed(evt);
             }
         });
 
@@ -50,77 +66,62 @@ public class evaluarfuncion extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 735, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(boton2)
-                .addGap(143, 143, 143))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 501, Short.MAX_VALUE)
+                        .addComponent(boton2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
+                .addGap(99, 99, 99)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(boton2)
-                .addGap(71, 71, 71))
+                .addContainerGap(166, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void boton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boton2ActionPerformed
-        
-        String cStr = JOptionPane.showInputDialog(this, "Ingrese el valor de la constante C:");
-        if (cStr == null) return;
-        double c = Double.parseDouble(cStr);
+      try{
+        double a = Double.parseDouble(jTextField1.getText());
+        double b = Double.parseDouble(jTextField2.getText());
+        double c = Double.parseDouble(jTextField3.getText());
 
-        String xInicialStr = JOptionPane.showInputDialog(this, "Ingrese el valor inicial de x:");
-        if (xInicialStr == null) return;
-        double xInicial = Double.parseDouble(xInicialStr);
+        miLienzo.setParametros(a,b,c);
 
-        String xFinalStr = JOptionPane.showInputDialog(this, "Ingrese el valor final de x:");
-        if (xFinalStr == null) return;
-        double xFinal = Double.parseDouble(xFinalStr);
-        
-        String incrementoStr = JOptionPane.showInputDialog(this, "Ingrese el incremento (ej: 1, 0.5, 0.1):");
-        if (incrementoStr == null) return;
-        double incremento = Double.parseDouble(incrementoStr);
+    }catch(Exception e){
 
-        // Validaciones de entrada
-        if (xInicial > xFinal) {
-            JOptionPane.showMessageDialog(this, "El valor inicial de x no puede ser mayor que el valor final.", "Error de Lógica", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (incremento <= 0) {
-            JOptionPane.showMessageDialog(this, "El incremento debe ser un número positivo.", "Error de Lógica", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+        JOptionPane.showMessageDialog(this,"Ingrese valores válidos");
 
-        // Encabezado en el área de texto
-        area2.setText(""); 
-        area2.append("Evaluando la función: y = 4x² - 6x + " + c + "\n");
-        area2.append("Desde x = " + xInicial + " hasta x = " + xFinal + " con incremento de " + incremento + "\n");
-        area2.append("--------------------------------------------------\n");
-        area2.append("  x\t\t  y\n"); // Encabezados de la tabla
-        area2.append("--------------------------------------------------\n");
-
-        // Bucle para calcular y mostrar los valores
-        for (double x = xInicial; x <= xFinal; x += incremento) {
-            // Fórmula: y = 4x^2 - 6x + C
-            double y = (4 * x * x) - (6 * x) + c;
-            
-            // Formato con 2 decimales
-            String linea = String.format("x = %.2f\t\ty = %.2f\n", x, y);
-            area2.append(linea);
-        }
-
- 
-    
+    }
     }//GEN-LAST:event_boton2ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
 
     public static void main(String args[]) {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -142,8 +143,9 @@ public class evaluarfuncion extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea area2;
     private javax.swing.JButton boton2;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }
