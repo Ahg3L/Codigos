@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include "Validar_numeros.h"
 using namespace std;
 
 struct nodo
@@ -8,14 +9,14 @@ struct nodo
     struct nodo *siguiente;
     struct nodo *anterior;
 };
-
+    
 void insertar(nodo *&cola, nodo *&pila, int n)
 {
     int ops;
     cout << "En donde quieres ingresar el dato ?" << endl;
     cout << "1.-Cola" << endl;
     cout << "2.-Pila" << endl;
-    cin >> ops;
+    ops = validador(1, 2);
     if (ops == 1)
     {
         nodo *new_nodo_cola = new nodo();
@@ -112,7 +113,7 @@ void buscar(nodo *cola, nodo *pila, int n)
 {
     int ops = 0;
     cout << "En donde quieres buscar \n1.-Pila.\n2.-Cola.\n";
-    cin >> ops;
+    ops = validador(1, 2);
 
     if (ops == 1)
     {
@@ -192,25 +193,25 @@ void menu(nodo *cola, nodo *pila)
         cout << "2.- Buscar numero." << endl;
         cout << "3.- Eliminar numero." << endl;
         cout << "4.- Salir." << endl;
-        cin >> ops;
+        ops = validador(1, 4);
         switch (ops)
         {
         case 1:
             cout << "Ingresa un numero :";
-            cin >> dato;
+            dato = validador();
             insertar(cola, pila, dato);
             break;
         case 2:
             cout << "Ingresa el numero que quieres buscar : ";
-            cin >> num;
+            num = validador();
             buscar(cola, pila, num);
             break;
         case 3:
             cout << "Ingresa el numero que quieres eliminar  : ";
-            cin >> num;
+            num = validador();
             int ops;
             cout << "Donde quieres eliminar el dato?\n1.-Cola.\n2.-Pila.\n";
-            cin >> ops;
+            ops = validador(1, 2);
             if (ops == 1)
             {
                 eliminar(cola, num);
@@ -225,8 +226,6 @@ void menu(nodo *cola, nodo *pila)
         }
     } while (ops != 4);
 }
-
-
 
 int main()
 {

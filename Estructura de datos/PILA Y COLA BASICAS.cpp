@@ -1,50 +1,52 @@
 #include <iostream>
 #include <map>
+#include "validar_numeros.h"
 
 using namespace std;
-// (valores maximos  y minimose pilas y colas )
-int maximoP = 0, maximoC = 0, minimoP = 0, minimoC = 0;
+
 // (Contadores de elementos en pila y cola)
 int contadorP = 0, contadorC = 0;
 
 int pila[15] = {0};
 int cola[15] = {0};
 
-void anadir(int puntero_pila, int puntero_cola)
+void anadir()
 {
-    int opc = 0;
-    int valor = 0;
+    int opc;
+    int valor;
 
     cout << "Pila o cola?\n1.-Pila\n2.-Cola\n";
 
-    if (!(cin >> opc))
-    {
-        cout << "Entrada invalida." << endl;
-        cin.clear();            // reinicia el estado de error de cin
-        cin.ignore(1000, '\n'); // limpia el buffer de entrada
-        system("pause");
-        return;
-    }
+    opc = validador(1, 2); // valor válidado
 
     switch (opc)
     {
     case 1:
+        if (contadorP >= 15)
+        {
+            cout << "Pila llena." << endl;
+            system("pause");
+            return;
+        }
+
         cout << "Ingrese un valor:";
-        cin >> valor;
-        pila[puntero_pila] = valor;
-        contadorP++;
+        valor = validador(); //  aquí obtienes el número válido
+
+        pila[contadorP++] = valor;
         break;
 
     case 2:
-        cout << "Ingrese un valor:";
-        cin >> valor;
-        cola[puntero_cola] = valor;
-        contadorC++;
-        break;
+        if (contadorC >= 15)
+        {
+            cout << "Cola llena." << endl;
+            system("pause");
+            return;
+        }
 
-    default:
-        cout << "Opcion no valida." << endl;
-        system("pause");
+        cout << "Ingrese un valor:";
+        valor = validador(); //  aquí obtienes el número válido
+
+        cola[contadorC++] = valor;
         break;
     }
 }
@@ -52,24 +54,24 @@ void anadir(int puntero_pila, int puntero_cola)
 // Estructura para almacenar valores máximos y minimos
 struct Maximos_y_minimos
 {
-    int maximoP = 0, maximoC = 0, minimoP = 0, minimoC = 0;
-} maxi, mini;
+    int maximo = 0, minimo = 0;
+} PilaM, ColaM;
 
 // Función para encontrar el valor máximo en pila y cola
 void maximo()
 {
-    mini.minimoP = pila[0];
-    mini.minimoC = cola[0];
+    PilaM.maximo = pila[0];
+    ColaM.maximo = cola[0];
 
     for (int i = 0; i < 15; i++)
     {
-        if (pila[i] > maxi.maximoP)
+        if (pila[i] > PilaM.maximo)
         {
-            maxi.maximoP = pila[i];
+            PilaM.maximo = pila[i];
         }
-        if (cola[i] > maxi.maximoC)
+        if (cola[i] > ColaM.maximo)
         {
-            maxi.maximoC = cola[i];
+            ColaM.maximo = cola[i];
         }
     }
 }
@@ -77,21 +79,21 @@ void maximo()
 // Función para encontrar el valor mínimo en pila y cola
 void minimo()
 {
-    mini.minimoP = pila[0];
-    mini.minimoC = cola[0];
+    PilaM.minimo = pila[0];
+    ColaM.minimo = cola[0];
     for (int j = 0; j < contadorP; j++)
     {
-        if (pila[j] < mini.minimoP)
+        if (pila[j] < PilaM.minimo)
         {
-            mini.minimoP = pila[j];
+            PilaM.minimo = pila[j];
         }
     }
 
     for (int i = 0; i < contadorC; i++)
     {
-        if (cola[i] < mini.minimoC)
+        if (cola[i] < ColaM.minimo)
         {
-            mini.minimoC = cola[i];
+            ColaM.minimo = cola[i];
         }
     }
 }
@@ -127,7 +129,7 @@ void moda()
     }
     else
     {
-        cout << "No hay una moda en el arreglo." << endl;
+        cout << "No hay una moda en el arreglo de la pila." << endl;
     }
 
     for (int i = 0; i < contadorC; i++)
@@ -147,7 +149,7 @@ void moda()
     }
     else
     {
-        cout << "No hay una moda en el arreglo." << endl;
+        cout << "No hay una moda en el arreglo de la cola." << endl;
     }
 }
 
@@ -193,26 +195,8 @@ void rango()
 {
     minimo();
     maximo();
-    cout << "El rango de la pila: " << (maxi.maximoP - mini.minimoP) << endl;
-    cout << "El rango de la cola: " << (maxi.maximoC - mini.minimoC) << endl;
-}
-
-// Función para calcular la desviación media de pila y cola
-void desviacion()
-{
-    float desP = 0.0, desC = 0.0;
-    for (int i = 0; i < contadorP; i++)
-    {
-        desP = desP + ((pila[i] - P.prompila) / contadorP);
-    }
-    for (int i = 0; i < contadorC; i++)
-    {
-        desC = desC + ((cola[i] - P.promcola) / contadorC);
-    }
-    cout << endl
-         << "La desviacion media de la pila es : " << desP << endl;
-    cout << "La desviacion media de la cola es : " << desC << endl
-         << endl;
+    cout << "El rango de la pila: " << (PilaM.maximo - PilaM.minimo) << endl;
+    cout << "El rango de la cola: " << (ColaM.maximo - ColaM.minimo) << endl;
 }
 
 int main()
@@ -243,28 +227,20 @@ int main()
         cout << "4. Encontrar la sumatoria" << endl;
         cout << "5. Encontrar el promedio" << endl;
         cout << "6. Desplegar el rango" << endl;
-        cout << "7. Calcular la desviacion media" << endl;
-        cout << "8. Salir" << endl;
+        cout << "7. Salir" << endl;
 
-        if (!(cin >> opcion))
-        {
-            cout << "Entrada invalida." << endl;
-            cin.clear();            // reinicia el estado de error de cin
-            cin.ignore(1000, '\n'); // limpia el buffer de entrada
-            system("pause");
-            return;
-        }
-
+        opcion = validador(1, 7); // valor validado
         switch (opcion)
         {
         case 1:
-            anadir(contadorP, contadorC);
+            anadir();
             break;
 
         case 2: // Encontrar el máximo
             maximo();
-            cout << "Maximo Pila: " << maxi.maximoP << "  Maximo Cola: " << maxi.maximoC << endl;
-            cout << "Minimo Pila: " << mini.minimoP << "  Minimo Cola: " << mini.minimoC << endl;
+            minimo();
+            cout << "Maximo Pila: " << PilaM.maximo << "  Maximo Cola: " << ColaM.maximo << endl;
+            cout << "Minimo Pila: " << PilaM.minimo << "  Minimo Cola: " << ColaM.minimo << endl;
             system("pause");
             break;
 
@@ -291,13 +267,7 @@ int main()
             system("pause");
             break;
 
-        case 7: // Calcular la desviación media
-            promedio();
-            desviacion();
-            system("pause");
-            break;
-
-        case 8: // Termina el programa
+        case 7: // Termina el programa
             return 0;
             break;
 
