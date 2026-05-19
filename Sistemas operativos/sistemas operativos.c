@@ -5,7 +5,7 @@
 
 #define MEMORIA_TOTAL 200
 #define SO 20
-#define NUM_TAREAS 20
+#define NUM_TAREAS 4
 
 // Estructura Tabla Memoria
 struct nodo_MT
@@ -35,7 +35,7 @@ struct nodo_MT *crea_MT(void);
 void imprime_MT(struct nodo_MT *);
 struct nodo_JT *crear_JT(void);
 void imprime_JT(struct nodo_JT *);
-void asignar_tareas(struct nodo_MT *memoria, struct nodo_JT *tareas, int metodo);
+void asignar_tareas(struct nodo_MT *memoria, struct nodo_JT **tareas, int metodo);
 
 // --------------------
 // MAIN
@@ -45,7 +45,7 @@ int main()
 
     struct nodo_MT *lista_memoria;
     struct nodo_JT *lista_tareas;
-
+    system("cls");
     printf("\n--- ADMINISTRACION DE MEMORIA ---\n");
 
     // Crear tabla memoria
@@ -61,10 +61,11 @@ int main()
     imprime_JT(lista_tareas);
 
     // Asignar tareas
-    asignar_tareas(lista_memoria, lista_tareas, 1); // 1 para primer ajuste
+    asignar_tareas(lista_memoria, &lista_tareas, 1); // 1 para primer ajuste
 
     printf("\nTABLA DE MEMORIA FINAL\n");
     imprime_MT(lista_memoria);
+    imprime_JT(lista_tareas);
 
     return 0;
 }
@@ -113,7 +114,7 @@ struct nodo_MT *crea_MT()
         if (tam > restan)
         {
             printf("No hay espacio suficiente\n");
-
+            printf("\nMemoria restante %d KB", restan);
             continue;
         }
 
@@ -132,8 +133,6 @@ struct nodo_MT *crea_MT()
 
         restan -= tam;
         direccion_actual += tam;
-
-        printf("\nMemoria restante %d KB", restan);
     }
 
     return inicio;
@@ -218,75 +217,81 @@ void imprime_JT(struct nodo_JT *cabezera)
 // ASIGNAR TAREAS
 // --------------------
 
-void asignar_tareas(struct nodo_MT *memoria, struct nodo_JT *tareas, int metodo)
+void asignar_tareas(struct nodo_MT *memoria,
+                    struct nodo_JT **tareas,
+                    int metodo)
 {
-    printf("\n--- ASIGNACION DE TAREAS ---\n");
+    struct nodo_JT *actual = *tareas;
+    struct nodo_JT *anterior = NULL;
 
-    for (struct nodo_JT *tarea = tareas;
-         tarea != NULL;
-         tarea = tarea->sig)
+    while (actual != NULL)
     {
-        struct nodo_MT *bloque = NULL;
+        struct nodo_MT *bloque = memoria->sig;
         struct nodo_MT *seleccionado = NULL;
 
         int mejor_espacio = 0;
 
-        for (bloque = memoria->sig;
-             bloque != NULL;
-             bloque = bloque->sig)
+        while (bloque != NULL)
         {
             if (bloque->estado == 0 &&
-                bloque->tamaniob >= tarea->tamaniot)
+                bloque->tamaniob >= actual->tamaniot)
             {
-                switch (metodo)
+                if (metodo == 1) // FIRST FIT
                 {
-                case 1: // FIRST FIT
                     seleccionado = bloque;
-                    bloque = NULL; // para salir del for
                     break;
-
-                case 2: // BEST FIT
+                }
+                else if (metodo == 2) // BEST FIT
                 {
-                    int espacio = bloque->tamaniob - tarea->tamaniot;
+                    int espacio = bloque->tamaniob - actual->tamaniot;
 
-                    if (seleccionado == NULL || espacio < mejor_espacio)
+                    if (seleccionado == NULL ||
+                        espacio < mejor_espacio)
                     {
                         seleccionado = bloque;
                         mejor_espacio = espacio;
                     }
-                    break;
                 }
-
-                case 3: // WORST FIT
+                else if (metodo == 3) // WORST FIT
                 {
-                    int espacio = bloque->tamaniob - tarea->tamaniot;
+                    int espacio = bloque->tamaniob - actual->tamaniot;
 
-                    if (seleccionado == NULL || espacio > mejor_espacio)
+                    if (seleccionado == NULL ||
+                        espacio > mejor_espacio)
                     {
                         seleccionado = bloque;
                         mejor_espacio = espacio;
                     }
-                    break;
-                }
                 }
             }
+
+            bloque = bloque->sig;
         }
 
         if (seleccionado != NULL)
         {
             seleccionado->estado = 1;
-            seleccionado->fi = seleccionado->tamaniob - tarea->tamaniot;
-            seleccionado->Asignacion++;
+            seleccionado->Asignacion = actual->ntarea;
+            seleccionado->fi = seleccionado->tamaniob - actual->tamaniot;
 
-            printf("Tarea J%d asignada a Bloque B%d | FI=%d KB\n",
-                   tarea->ntarea,
-                   seleccionado->nbloque,
-                   seleccionado->fi);
+            // Eliminar tarea de la lista
+            if (anterior == NULL)
+            {
+                *tareas = actual->sig;
+                free(actual);
+                actual = *tareas;
+            }
+            else
+            {
+                anterior->sig = actual->sig;
+                free(actual);
+                actual = anterior->sig;
+            }
         }
         else
         {
-            printf("Tarea J%d no se pudo asignar\n",
-                   tarea->ntarea);
+            anterior = actual;
+            actual = actual->sig;
         }
     }
 }
