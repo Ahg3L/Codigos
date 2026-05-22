@@ -4,9 +4,9 @@
 #include <time.h>
 #include <ctype.h>
 
-#define SO_RESERVA 20
+#define SO_RESERVA 20 // 20 KB reservados para el S.O.
 #define NUM_TAREAS 20
-#define TAM_MARCO 10
+#define TAM_MARCO 10 // 10 KB por marco
 
 // --------------------------------------------------
 // Estructura para el Registro de la PMT
@@ -46,8 +46,8 @@ struct nodo_MT
 };
 
 // Prototipos de funciones
-struct nodo_MT *crea_MMT(int MEMORIA_TOTAL_BYTES);
-struct nodo_JT *crear_JT(int MEMORIA_TOTAL_BYTES);
+struct nodo_MT *crea_MMT(int MEMORIA_TOTAL);
+struct nodo_JT *crear_JT(int MEMORIA_TOTAL);
 void imprime_JT(struct nodo_JT *);
 void imprime_MHT(struct nodo_MT *);
 void imprime_PMTs(struct nodo_JT *);
@@ -71,10 +71,10 @@ int main()
     int valor;
     char unidad[3];
 
-    int MEMORIA_TOTAL_BYTES = validar_tamano(entrada, valor, unidad);
+    int MEMORIA_TOTAL = validar_tamano(entrada, valor, unidad);
 
-    lista_memoria = crea_MMT(MEMORIA_TOTAL_BYTES);
-    lista_tareas = crear_JT(MEMORIA_TOTAL_BYTES);
+    lista_memoria = crea_MMT(MEMORIA_TOTAL);
+    lista_tareas = crear_JT(MEMORIA_TOTAL);
 
     while (1)
     {
@@ -146,10 +146,10 @@ int main()
 // --------------------------------------------------
 // CREAR TABLA DE MEMORIA (MHT)
 // --------------------------------------------------
-struct nodo_MT *crea_MMT(int MEMORIA_TOTAL_BYTES)
+struct nodo_MT *crea_MMT(int MEMORIA_TOTAL)
 {
     struct nodo_MT *inicio = NULL, *actual = NULL, *nuevo;
-    int num_marcos = MEMORIA_TOTAL_BYTES / TAM_MARCO;
+    int num_marcos = MEMORIA_TOTAL / TAM_MARCO;
 
     for (int i = 0; i < num_marcos; i++)
     {
@@ -191,7 +191,7 @@ struct nodo_MT *crea_MMT(int MEMORIA_TOTAL_BYTES)
 // --------------------------------------------------
 // CREAR TABLA DE TAREAS (JT) ALEATORIAS
 // --------------------------------------------------
-struct nodo_JT *crear_JT(int MEMORIA_TOTAL_BYTES)
+struct nodo_JT *crear_JT(int MEMORIA_TOTAL)
 {
     struct nodo_JT *inicio = NULL, *actual = NULL, *nuevo;
     srand(time(NULL));
@@ -432,7 +432,7 @@ void liberar_tarea(struct nodo_MT *memoria, struct nodo_JT *tareas, int id_busca
 
 int validar_tamano(char entrada[], int valor, char unidad[])
 {
-    int MEMORIA_TOTAL_BYTES = 0;
+    int MEMORIA_TOTAL = 0;
 
     while (1)
     {
@@ -455,14 +455,14 @@ int validar_tamano(char entrada[], int valor, char unidad[])
             // KB -> BYTES
             if (strcmp(unidad, "KB") == 0)
             {
-                MEMORIA_TOTAL_BYTES = valor * 1024;
+                MEMORIA_TOTAL = valor;
                 break;
             }
 
             // MB -> BYTES
             else if (strcmp(unidad, "MB") == 0)
             {
-                MEMORIA_TOTAL_BYTES = valor * 1024 * 1024;
+                MEMORIA_TOTAL = valor * 1024;
                 break;
             }
         }
@@ -474,14 +474,14 @@ int validar_tamano(char entrada[], int valor, char unidad[])
         printf("512kb\n\n");
     }
 
-    printf("\nMemoria total en Bytes: %d Bytes\n", MEMORIA_TOTAL_BYTES);
+    printf("\nMemoria total en Bytes: %d Bytes\n", MEMORIA_TOTAL * 1024);
 
     // Validar que la memoria sea mayor a la reserva del S.O.
-    if (MEMORIA_TOTAL_BYTES < SO_RESERVA)
+    if (MEMORIA_TOTAL < SO_RESERVA)
     {
         printf("[!] ERROR: La memoria total no puede ser menor que la reserva del S.O. (%d Bytes).\n", SO_RESERVA);
         return -1;
     }
 
-    return MEMORIA_TOTAL_BYTES;
+    return MEMORIA_TOTAL;
 }
