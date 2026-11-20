@@ -10,6 +10,7 @@
 #define NUM_TAREAS 20
 #define TAM_MARCO 64
 #define SECUENCIA 8
+#define QUANTUM 3
 
 struct nodo_PCB *Plista = NULL;
 struct nodo_PCB *Ultimo = NULL;
@@ -38,7 +39,8 @@ struct nodo_MMT
 
 struct nodo_PCB
 {
-    char proceso[15];
+    int tarea;
+    int pagina;
     int t_llegada;
     int ciclos;
     int estado;
@@ -226,77 +228,115 @@ struct nodo_MMT *crea_MMT(struct nodo_PCB *lista_pcb)
 /* ═════════════════════════════════════════
    CREA PCB
    ═════════════════════════════════════════ */
-
 void crea_PCB(struct nodo_JT *lista_jt)
 {
-    struct nodo_JT *jt = lista_jt;
+    struct nodo_JT *jt;
     struct nodo_PCB *nuevo;
-    int usada[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     int pagina;
     int tiempo_actual = 0;
+    int i,k;
+
+    /* índice de avance por tarea — cuántas páginas de la secuencia ya procesó */
+    int avance[NUM_TAREAS];
+    int usada[NUM_TAREAS][10];
+    int terminada[NUM_TAREAS];
+    int total_tareas = 0;
+    int todas_listas;
 
     Plista = NULL;
     Ultimo = NULL;
 
+    /* contar tareas e inicializar arreglos */
+    jt = lista_jt;
     while (jt != NULL)
     {
-
-        for (int j = 0; j < SECUENCIA; j++)
-        {
-            pagina = jt->secuencia[j];
-
-            if (pagina < 0 || pagina > 9)
-                continue;
-
-            if (usada[pagina] == 0)
-            {
-                usada[pagina] = 1;
-
-                nuevo = (struct nodo_PCB *)malloc(sizeof(struct nodo_PCB));
-                if (nuevo == NULL)
-                {
-                    printf("Error: no hay memoria para PCB.\n");
-                    return;
-                }
-
-                sprintf(nuevo->proceso, "J%dP%d", jt->tarea, pagina);
-
-                nuevo->t_llegada = tiempo_actual;
-                nuevo->ciclos = 1 + rand() % (10 - 1 + 1);
-                nuevo->estado = 1;
-                nuevo->memoria = 10 + rand() % (120 - 10 + 1);
-
-                if (rand() % 2 == 1)
-                    strcpy(nuevo->cpu_es, "CPU");
-                else
-                    strcpy(nuevo->cpu_es, "E/S");
-
-                nuevo->num_disp = 1 + rand() % (5 - 1 + 1);
-                nuevo->no_arch = 1 + rand() % (10 - 1 + 1);
-
-                if (rand() % 2 == 1)
-                    strcpy(nuevo->tipo, "USR");
-                else
-                    strcpy(nuevo->tipo, "SIS");
-                nuevo->sig = NULL;
-
-                tiempo_actual++;
-
-                if (Plista == NULL)
-                {
-                    Plista = nuevo;
-                    Ultimo = nuevo;
-                }
-                else
-                {
-                    Ultimo->sig = nuevo;
-                    Ultimo = nuevo;
-                }
-            }
-        }
-
+        avance[total_tareas] = 0;
+        terminada[total_tareas] = 0;
+        for (i = 0; i < 10; i++)
+            usada[total_tareas][i] = 0;
+        total_tareas++;
         jt = jt->sig;
     }
+
+    /* Round Robin: cada vuelta da QUANTUM páginas a cada tarea */
+    do
+    {
+        todas_listas = 1;
+        jt = lista_jt;
+
+        for (i = 0; i < total_tareas; i++)
+        {
+            if (!terminada[i])
+            {
+                int asignadas = 0; /* páginas asignadas en este quantum */
+
+                while (asignadas < QUANTUM && avance[i] < SECUENCIA)
+                {
+                    pagina = jt->secuencia[avance[i]];
+                    avance[i]++;
+
+                    if (pagina < 0 || pagina > 9)
+                        continue;
+
+                    if (usada[i][pagina] == 0)
+                    {
+                        usada[i][pagina] = 1;
+
+                        nuevo = (struct nodo_PCB *)malloc(sizeof(struct nodo_PCB));
+                        if (nuevo == NULL)
+                        {
+                            printf("Error: no hay memoria para PCB.\n");
+                            return;
+                        }
+
+                        nuevo->tarea = jt->tarea;
+                        nuevo->pagina = pagina;
+                        nuevo->t_llegada = tiempo_actual;
+                        nuevo->ciclos = 1 + rand() % 10;
+                        nuevo->estado = 1;
+                        nuevo->memoria = 10 + rand() % 111;
+
+                        if (rand() % 2 == 1)
+                            strcpy(nuevo->cpu_es, "CPU");
+                        else
+                            strcpy(nuevo->cpu_es, "E/S");
+
+                        nuevo->num_disp = 1 + rand() % 5;
+                        nuevo->no_arch = 1 + rand() % 10;
+
+                        if (rand() % 2 == 1)
+                            strcpy(nuevo->tipo, "USR");
+                        else
+                            strcpy(nuevo->tipo, "SIS");
+
+                        nuevo->sig = NULL;
+                        tiempo_actual++;
+                        asignadas++;
+
+                        if (Plista == NULL)
+                        {
+                            Plista = nuevo;
+                            Ultimo = nuevo;
+                        }
+                        else
+                        {
+                            Ultimo->sig = nuevo;
+                            Ultimo = nuevo;
+                        }
+                    }
+                }
+
+                /* si ya no quedan páginas por procesar, marcar como terminada */
+                if (avance[i] >= SECUENCIA)
+                    terminada[i] = 1;
+                else
+                    todas_listas = 0; /* aún hay trabajo pendiente */
+            }
+
+            jt = jt->sig;
+        }
+
+    } while (!todas_listas);
 }
 
 /* ═════════════════════════════════════════
@@ -399,8 +439,9 @@ void imprimir_PCB(struct nodo_PCB *lista)
     aux = lista;
     while (aux != NULL)
     {
-        printf("%-10s %-10d %-8d %-8d %-10d %-8s %-10d %-8d %-8s\n",
-               aux->proceso,
+        printf(" J%dP%-8d %-8d %-8d %-8d %-10d %-8s %-10d %-8d %-8s\n",
+               aux->tarea,
+               aux->pagina,
                aux->t_llegada,
                aux->ciclos,
                aux->estado,
