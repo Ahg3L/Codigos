@@ -1,0 +1,64 @@
+struct nodo_JT *crear_lista_plantilla(void)
+{
+    
+    struct nodo_JT *cabeza = NULL, *ultimo = NULL;
+
+    for (int i = 0; i < X; i++) // REEMPLAZAR 'X': Por tu constante o número de nodos (ej. NUM_TAREAS)
+    {
+        struct nodo_JT *nuevo = (struct nodo_JT *)malloc(sizeof(struct nodo_JT));
+        
+        // --- INICIO: SECCIÓN DE MODIFICACIÓN/LLENADO DE DATOS ---
+        nuevo->tarea = i + 1; // O el ID que te pidan
+        
+        // REEMPLAZAR AQUÍ: Coloca los datos aleatorios o fijos que te pida el examen
+        nuevo->tamano = X;    
+        nuevo->loc_memo = X;  
+        
+        // No olvides siempre apuntar el siguiente a NULL por seguridad
+        nuevo->sig = NULL; 
+        // --- FIN: SECCIÓN DE LLENADO ---
+
+        // 2. Mecanismo de inserción al final de la lista (Esqueleto fijo)
+        if (!cabeza)
+        {
+            // Si la lista está vacía, el nuevo nodo es el primero y el último
+            cabeza = ultimo = nuevo;
+        }
+        else
+        {
+            // Si ya hay nodos, enganchamos al final y movemos el puntero 'ultimo'
+            ultimo->sig = nuevo;
+            ultimo = nuevo;
+        }
+    }
+    
+    // Al terminar el bucle, regresamos el inicio de toda la lista
+    return cabeza;
+}
+
+
+
+
+
+
+
+void modificar_lista_plantilla(struct nodo_JT *cabeza)
+{
+    // Puntero auxiliar para no perder la cabeza original de la lista
+    struct nodo_JT *actual = cabeza;
+
+    // Bucle que recorre la lista elemento por elemento hasta llegar al final (NULL)
+    while (actual != NULL)
+    {
+        // --- INICIO: SECCIÓN DE OPERACIÓN POR NODO ---
+        
+        // REEMPLAZAR AQUÍ: La condición o modificación que te pida la maestra
+        // Ejemplo: si te pide asignarle memoria a un proceso o cambiar un estado.
+        actual->tamano = X; // REEMPLAZAR 'X': Por la nueva lógica o cálculo
+        
+        // --- FIN: SECCIÓN DE OPERACIÓN ---
+
+        // PASO CRUCIAL: Avanzar al siguiente nodo (Si olvidas esto, se hace un bucle infinito)
+        actual = actual->sig;
+    }
+}

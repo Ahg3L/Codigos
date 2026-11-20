@@ -4,9 +4,9 @@
 #include <time.h>
 #include <conio.h>
 
-#define MEMORIA_TOTAL 3 // MB
-#define SO 2            // MARCOS PARA SO
-#define NUM_TAREAS 20
+#define MEMORIA_TOTAL 3 // kB (1.5 MB)
+#define SO 2            // kB reservados para SO
+#define NUM_TAREAS 5
 #define TAM_MARCO 64 // KB
 #define SECUENCIA 8
 
@@ -212,7 +212,7 @@ struct nodo_JT *crea_JT(void)
         // ID
         nuevo->id = i + 1;
         nuevo->lineas = rand() % 900 + 100;
-        nuevo->loc_pmt = rand() % 90000 + 10000;
+        nuevo->loc_pmt = (rand() % 46 + 2) * 64;
         nuevo->tam_secuencia = SECUENCIA;
         nuevo->arrsecu = (int *)malloc(sizeof(int) * SECUENCIA);
 
@@ -296,7 +296,7 @@ void imprimir_TMP(struct nodo_TMP *cabeza)
     printf("\n\n============ TABLA DE MAPA DE PAGINAS ============\n");
 
     aux = cabeza;
-
+    int indice = 0;
     while (aux != NULL)
     {
 
@@ -305,7 +305,7 @@ void imprimir_TMP(struct nodo_TMP *cabeza)
         {
 
             tareaActual = aux->idTarea;
-
+            indice = 0;
             printf("\nTarea: J%d\n", tareaActual);
             printf("----------------------------------------------------------\n");
             printf("%-8s %-8s %-8s %-8s %-8s\n",
@@ -314,11 +314,12 @@ void imprimir_TMP(struct nodo_TMP *cabeza)
         }
 
         printf("%-8d %-8d %-8d %-8d %-8d\n",
-               aux->pagina,
+               indice,
                aux->marco,
                aux->estado,
                aux->referencia,
                aux->modificacion);
+        indice++;
 
         aux = aux->sig;
     }
@@ -333,7 +334,7 @@ void asignar_tareas(struct nodo_MT *mt, struct nodo_JT *lista_tareas, struct nod
 
     while (tarea_actual != NULL)
     {
-        printf("\nProcesando J%d\n", tarea_actual->id);
+        // printf("\nProcesando J%d\n", tarea_actual->id);
 
         for (int j = 0; j < tarea_actual->tam_secuencia; j++)
         {
@@ -347,7 +348,7 @@ void asignar_tareas(struct nodo_MT *mt, struct nodo_JT *lista_tareas, struct nod
                 if (auxT->idTarea == tarea_actual->id && auxT->pagina == pagina && auxT->estado == 1)
                 {
                     auxT->referencia = 1;
-                    printf("Pagina %d ya cargada en marco %d\n", pagina, auxT->marco);
+                    // printf("Pagina %d ya cargada en marco %d\n", pagina, auxT->marco);
                     encontrada = 1;
                     break;
                 }
@@ -356,7 +357,7 @@ void asignar_tareas(struct nodo_MT *mt, struct nodo_JT *lista_tareas, struct nod
 
             if (!encontrada)
             {
-                printf("FALLO DE PAGINA en Pag %d\n", pagina);
+                // printf("FALLO DE PAGINA en Pag %d\n", pagina);
 
                 // 2. Buscar marco libre en MT
                 struct nodo_MT *auxM = mt;
@@ -411,7 +412,7 @@ int ejecutar_reemplazo_FIFO(struct nodo_TMP **cabecera_tmp, int idTarea, int pag
     {
         if (aux->marco == marcoElegido && aux->estado == 1)
         {
-            printf("  -> Reemplazando J%d, Pag %d\n", aux->idTarea, aux->pagina);
+            // printf("  -> Reemplazando J%d, Pag %d\n", aux->idTarea, aux->pagina);
             aux->estado = 0; // Marcamos como ausente
             break;
         }
@@ -435,10 +436,4 @@ int ejecutar_reemplazo_FIFO(struct nodo_TMP **cabecera_tmp, int idTarea, int pag
         temp->sig = nuevo;
     }
     return 1;
-}
-
-void liberar_tarea(struct nodo_JT *tarea)
-{
-    free(tarea->arrsecu); // Primero liberas el arreglo interno
-    free(tarea);          // Luego el nodo
 }

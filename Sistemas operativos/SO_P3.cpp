@@ -4,9 +4,9 @@
 #include <time.h>
 #include <ctype.h>
 
-#define SO_RESERVA 20
+#define SO_RESERVA 20 // 20 KB reservados para el S.O.
 #define NUM_TAREAS 20
-#define TAM_MARCO 10
+#define TAM_MARCO 10 // 10 KB por marco
 
 // --------------------------------------------------
 // Estructura para el Registro de la PMT
@@ -31,7 +31,7 @@ struct nodo_JT
 };
 
 // --------------------------------------------------
-// Tabla Memoria (Memory  Table - MT)
+// Estructura Tabla Memoria (Memory Header Table - MHT)
 // --------------------------------------------------
 struct nodo_MT
 {
@@ -48,13 +48,11 @@ struct nodo_MT
 // Prototipos de funciones
 struct nodo_MT *crea_MMT(int MEMORIA_TOTAL);
 struct nodo_JT *crear_JT(int MEMORIA_TOTAL);
-
 void imprime_JT(struct nodo_JT *);
 void imprime_MHT(struct nodo_MT *);
 void imprime_PMTs(struct nodo_JT *);
 void asignar_paginacion(struct nodo_MT *, struct nodo_JT *);
 void liberar_tarea(struct nodo_MT *, struct nodo_JT *, int);
-
 int validar_tamano(char[], int, char[]);
 
 // --------------------------------------------------
